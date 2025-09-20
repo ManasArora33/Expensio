@@ -88,13 +88,18 @@ const Dashboard = () => {
         data: analytics?.categories?.map(cat => cat.total) || [],
         backgroundColor: [
           '#3B82F6', '#10B981', '#F59E0B',
-          '#EF4444', '#8B5CF6', '#EC4899'
+          '#EF4444', '#8B5CF6', '#EC4899', '#6366F1', '#D946EF'
         ],
         borderWidth: 0,
       }]
     },
     monthly: {
-      labels: analytics?.monthlyTrends?.map(item => item.month) || [],
+      labels: analytics?.monthlyTrends?.map(item => {
+        // Create a date for formatting. JS months are 0-indexed.
+        const date = new Date(item._id.year, item._id.month - 1);
+        // Format to "Mon 'YY" (e.g., "Jan '24")
+        return date.toLocaleString('en-US', { month: 'short', year: '2-digit' });
+      }) || [],
       datasets: [{
         label: 'Monthly Spending',
         data: analytics?.monthlyTrends?.map(item => item.total) || [],
@@ -181,22 +186,22 @@ const Dashboard = () => {
               <div>
                 <p className="text-sm font-medium text-gray-500">Total Spent</p>
                 <p className="mt-1 text-2xl font-semibold text-gray-900">
-                  {formatCurrency(analytics?.totals?.currentPeriod || 0)}
+                  {formatCurrency(analytics?.totalSpent || 0)}
                 </p>
-                {analytics?.totals?.percentageChange !== undefined && (
+                {analytics?.percentageChange !== undefined && (
                   <div className="flex items-center mt-2">
-                    {analytics.totals?.percentageChange >= 0 ? (
+                    {analytics.percentageChange >= 0 ? (
                       <TrendingUp className="h-4 w-4 text-green-500" />
                     ) : (
                       <TrendingDown className="h-4 w-4 text-red-500" />
                     )}
                     <span
-                      className={`ml-1 text-sm ${analytics.totals.percentageChange >= 0
+                      className={`ml-1 text-sm ${analytics.percentageChange >= 0
                         ? 'text-green-600'
                         : 'text-red-600'
                         }`}
                     >
-                      {Math.abs(analytics.totals?.percentageChange || 0)}% from last {timeRange}
+                      {Math.abs(analytics.percentageChange || 0)}% from last {timeRange}
                     </span>
                   </div>
                 )}
@@ -299,8 +304,8 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {analytics?.recentTransactions?.length > 0 ? (
-                    analytics?.recentTransactions.map((transaction) => (
+                  {analytics && analytics.recentTransactions && analytics.recentTransactions.length > 0 ? (
+                    analytics.recentTransactions.map((transaction) => (
                       <tr key={transaction._id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">

@@ -9,9 +9,18 @@ def call_chatbot(query, expense = ''):
 
     model = ChatGoogleGenerativeAI(model='gemini-1.5-flash')
 
-    chat_history = []
-    with open('D:\Expensio2\history.txt') as f:
-        chat_history.extend(f.readlines())
+    history_file_path = 'D:\\Expensio2\\history.txt'
+    chat_history_raw = []
+    try:
+        with open(history_file_path, 'r', encoding='utf-8') as f:
+            chat_history_raw = f.readlines()
+    except FileNotFoundError:
+        # If the file doesn't exist, we start with an empty history.
+        pass
+    except UnicodeDecodeError:
+        # If the file is corrupted or not in UTF-8, we start with a fresh history.
+        # You might want to log this event for debugging.
+        print(f"Warning: Could not decode {history_file_path}. Starting with a new history.")
 
     template = PromptTemplate(
         template='''
@@ -31,20 +40,28 @@ def call_chatbot(query, expense = ''):
         ('human', '{query} {expense}')
     ])
 
-    chat_history.append(HumanMessage(f'{query} {expense}'))
+    # Reconstruct chat history from raw lines
+    chat_history = []
+    for line in chat_history_raw:
+        if line.startswith('Human: '):
+            chat_history.append(HumanMessage(content=line.replace('Human: ', '', 1).strip()))
+        elif line.startswith('AI: '):
+            chat_history.append(AIMessage(content=line.replace('AI: ', '', 1).strip()))
 
     prompt = template.invoke({
         'expense': expense,
         'chat_history': chat_history,
         'query': query
     })
-
+    
     result = model.invoke(prompt)
+    
+    # Add the latest interaction to the history before writing
+    chat_history.append(HumanMessage(f'{query} {expense}'))
     chat_history.append(AIMessage(result.content))
 
-    file_name = "D:\Expensio2\history.txt"
-
-    with open(file_name, 'a') as file:
+    # Overwrite the history file with the full, updated history
+    with open(history_file_path, 'w', encoding='utf-8') as file:
         for message in chat_history:
             if isinstance(message, HumanMessage):
                 file.write(f"Human: {message.content}\n")
@@ -54,4 +71,3 @@ def call_chatbot(query, expense = ''):
     return result
 
 # print(call_chatbot("how to save my money"))
-

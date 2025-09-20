@@ -105,17 +105,31 @@ const deleteExpense = async (req, res) => {
 const getAnalytics = async (req, res) => {
     try {
         const userId = req.user._id;
+        const { timeRange } = req.query; // 'week', 'month', 'year'
+
+        const toDate = new Date();
+        let fromDate = new Date();
+
+        if (timeRange === 'week') {
+            fromDate.setDate(toDate.getDate() - 7);
+        } else if (timeRange === 'year') {
+            fromDate.setFullYear(toDate.getFullYear() - 1);
+        } else { // default to 'month'
+            fromDate.setMonth(toDate.getMonth() - 1);
+        }
+
+        const dateFilter = { date: { $gte: fromDate, $lte: toDate } };
 
         // Total spending
         const totalResult = await Expense.aggregate([
-            { $match: { user: userId } },
+            { $match: { user: userId, ...dateFilter } },
             { $group: { _id: null, total: { $sum: '$amount' } } }
         ]);
         const totalSpent = totalResult[0]?.total || 0;
 
         // Category breakdown
         const categoryBreakdown = await Expense.aggregate([
-            { $match: { user: userId } },
+            { $match: { user: userId, ...dateFilter } },
             { $group: { _id: '$category', total: { $sum: '$amount' }, count: { $sum: 1 } } },
             { $sort: { total: -1 } }
         ]);
@@ -125,7 +139,7 @@ const getAnalytics = async (req, res) => {
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
         const monthlyTrends = await Expense.aggregate([
-            { $match: { user: userId, createdAt: { $gte: sixMonthsAgo } } },
+            { $match: { user: userId, date: { $gte: sixMonthsAgo } } },
             {
                 $group: {
                     _id: {
@@ -139,13 +153,15 @@ const getAnalytics = async (req, res) => {
             { $sort: { '_id.year': 1, '_id.month': 1 } }
         ]);
 
-        res.json({
+        // Recent transactions
+        const recentTransactions = await Expense.find({ user: userId }).sort({ date: -1 }).limit(5);
+
+        res.status(200).json({
             success: true,
-            analytics: {
-                totalSpent,
-                categoryBreakdown,
-                monthlyTrends
-            }
+            totalSpent,
+            categories: categoryBreakdown,
+            monthlyTrends,
+            recentTransactions
         });
     } catch (error) {
         res.status(500).json({
@@ -157,5 +173,3 @@ const getAnalytics = async (req, res) => {
 };
 
 module.exports = { createExpense, getExpenses, updateExpense, deleteExpense, getAnalytics }
-
-
