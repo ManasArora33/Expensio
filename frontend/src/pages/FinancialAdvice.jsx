@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, AlertCircle, Sparkles } from 'lucide-react';
-import axios from 'axios';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import ReactMarkdown from 'react-markdown';
 
 const FinancialAdvice = () => {
   const [messages, setMessages] = useState([
@@ -16,6 +18,22 @@ const FinancialAdvice = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Auth check
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // This will throw if not authenticated, and the catch block will handle it
+        await api.get('/auth/me');
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        toast.error('Please log in to use the Financial Advisor.');
+        navigate('/login');
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -83,7 +101,8 @@ const FinancialAdvice = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50">
+      <Navbar />
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4">
         <div className="max-w-4xl mx-auto flex items-center">
@@ -122,19 +141,27 @@ const FinancialAdvice = () => {
                 </div>
                 <div
                   className={`rounded-2xl px-4 py-2 ${message.sender === 'user'
-                      ? 'bg-blue-600 text-white rounded-tr-none'
-                      : message.isError
-                        ? 'bg-red-50 text-red-700 rounded-tl-none border border-red-100'
-                        : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-200'
+                    ? 'bg-blue-600 text-white rounded-tr-none'
+                    : message.isError
+                      ? 'bg-red-50 text-red-700 rounded-tl-none border border-red-100'
+                      : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-200'
                     }`}
                 >
-                  <div className="prose prose-sm max-w-none">
-                    {message.text.split('\n').map((paragraph, i) => (
-                      <p key={i} className="whitespace-pre-wrap">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
+                  {message.sender === 'bot' ? (
+                    <ReactMarkdown
+                      children={message.text}
+                      components={{
+                        p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                        h1: ({ node, ...props }) => <h1 className="text-xl font-bold mb-2" {...props} />,
+                        h2: ({ node, ...props }) => <h2 className="text-lg font-semibold mb-2" {...props} />,
+                        h3: ({ node, ...props }) => <h3 className="text-base font-semibold mb-2" {...props} />,
+                        ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-2" {...props} />,
+                        ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-2" {...props} />,
+                      }}
+                    />
+                  ) : (
+                    <p className="whitespace-pre-wrap">{message.text}</p>
+                  )}
                   <div
                     className={`text-xs mt-1 ${message.sender === 'user' ? 'text-blue-100' : 'text-gray-400'
                       }`}

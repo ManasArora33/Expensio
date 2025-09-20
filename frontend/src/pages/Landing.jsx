@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BarChart3, Bot, CheckCircle, ChevronRight, DollarSign, MessageSquare, PieChart, Play, Plus, Sparkles, TrendingUp, Users, Zap } from 'lucide-react';
+import { ArrowRight, BarChart3, Bot, DollarSign, PieChart, Sparkles, TrendingUp, Zap, CheckCircle, ChevronRight, Users, MessageSquare, Plus, Play } from 'lucide-react';
 
 const Landing = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,17 +15,17 @@ const Landing = () => {
 
   const features = [
     {
-      icon: <Zap className="w-8 h-8 text-blue-500" />,
+      icon: <Zap className="w-8 h-8 text-indigo-500" />,
       title: "AI-Powered Parsing",
       description: "Automatically categorize expenses with natural language processing. Just type like you talk and let AI handle the rest."
     },
     {
-      icon: <BarChart3 className="w-8 h-8 text-green-500" />,
+      icon: <BarChart3 className="w-8 h-8 text-emerald-500" />,
       title: "Smart Analytics",
       description: "Beautiful visualizations and insights about your spending patterns to help you make better financial decisions."
     },
     {
-      icon: <Bot className="w-8 h-8 text-purple-500" />,
+      icon: <Bot className="w-8 h-8 text-rose-500" />,
       title: "Financial Advisor Chat",
       description: "Get personalized money advice and answers to your financial questions from our AI assistant."
     }
@@ -68,7 +68,7 @@ const Landing = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-blue-50 to-white">
+    <div className="bg-gray-50 text-gray-800">
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,7 +76,7 @@ const Landing = () => {
             <div className="flex-shrink-0 flex items-center">
               <div className="flex items-center">
                 <DollarSign className="h-8 w-8 text-blue-600" />
-                <span className="ml-2 text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                <span className="ml-2 text-2xl font-bold text-gray-900">
                   Expensio
                 </span>
               </div>
@@ -86,7 +86,7 @@ const Landing = () => {
                 Login
               </Link>
               <Link
-                to="/register"
+                to="/login"
                 className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity"
               >
                 Get Started
@@ -98,10 +98,10 @@ const Landing = () => {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto relative">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Smart Expense Tracking with <span className="text-blue-600">AI-Powered</span> Insights
+              Smart Expense Tracking with <span className="bg-gradient-to-r from-blue-600 to-indigo-400 bg-clip-text text-transparent">AI-Powered</span> Insights
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
               Transform how you manage money with intelligent expense parsing and personalized financial advice.
@@ -109,20 +109,58 @@ const Landing = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                to="/register"
-                className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-8 py-4 rounded-xl font-medium text-lg hover:opacity-90 transition-all transform hover:-translate-y-1 flex items-center justify-center"
+                to="/login"
+                className="bg-blue-600 text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-blue-700 transition-all transform hover:-translate-y-1 flex items-center justify-center shadow-lg hover:shadow-xl"
               >
                 Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-              
+
             </div>
           </div>
-          <div className="mt-16 max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            <img
-              src="https://images.unsplash.com/photo-1554224155-3a58922a22c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-              alt="Expense Tracker Dashboard"
-              className="w-full h-auto"
-            />
+          {/* App Mockup */}
+          <div className="mt-16 max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 p-4">
+            <div className="bg-gray-100 rounded-xl p-2">
+              {/* Mockup Header */}
+              <div className="flex items-center mb-2">
+                <div className="flex space-x-1.5 mr-4">
+                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div className="bg-white rounded-md px-4 py-1 text-sm text-gray-600 w-full max-w-md">
+                  expensio.app/dashboard
+                </div>
+              </div>
+              {/* Mockup Content */}
+              <div className="bg-white rounded-lg p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold">Dashboard</h2>
+                  <div className="flex space-x-1">
+                    <span className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Week</span>
+                    <span className="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">Month</span>
+                    <span className="px-3 py-1 text-xs bg-gray-200 text-gray-700 rounded-full">Year</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs text-gray-500">Total Spent</p>
+                    <p className="text-xl font-bold">₹12,450</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs text-gray-500">Top Category</p>
+                    <p className="text-xl font-bold">Food</p>
+                  </div>
+                </div>
+                <div className="mt-4 bg-gray-50 p-3 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-2">Recent Transactions</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm"><span>Starbucks Coffee</span><span>- ₹250</span></div>
+                    <div className="flex justify-between text-sm"><span>Uber Ride</span><span>- ₹180</span></div>
+                    <div className="flex justify-between text-sm"><span>Groceries</span><span>- ₹1,800</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -131,7 +169,7 @@ const Landing = () => {
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm uppercase tracking-wider text-gray-500 mb-8">TRUSTED BY INNOVATIVE TEAMS</p>
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
             {['Google', 'Microsoft', 'Slack', 'Shopify', 'Airbnb'].map((company) => (
               <div key={company} className="flex justify-center items-center col-span-1">
                 <span className="text-2xl font-bold text-gray-700">{company}</span>
@@ -142,7 +180,7 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose AI Expense Tracker</h2>
@@ -152,8 +190,8 @@ const Landing = () => {
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center mb-6">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
@@ -165,7 +203,7 @@ const Landing = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
@@ -179,7 +217,7 @@ const Landing = () => {
                 <div className="absolute -left-4 top-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
                   {step.number}
                 </div>
-                <div className="bg-white p-8 rounded-xl h-full pt-12">
+                <div className="bg-white p-8 rounded-2xl h-full pt-12 shadow-lg border border-gray-100">
                   <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
                   <p className="text-gray-600">{step.description}</p>
                 </div>
@@ -190,7 +228,7 @@ const Landing = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Trusted by 10,000+ Users</h2>
@@ -200,7 +238,7 @@ const Landing = () => {
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-xl">
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-bold">
                     {testimonial.name.charAt(0)}
@@ -218,22 +256,22 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-blue-400">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-100">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Take Control of Your Finances?</h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Ready to Take Control of Your Finances?</h2>
+          <p className="text-xl text-gray-600 mb-8">
             Join thousands of users who are already managing their expenses smarter with AI
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              to="/register"
-              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-medium text-lg hover:bg-gray-100 transition-colors"
+              to="/login"
+              className="bg-blue-600 text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
             >
               Get Started Free
             </Link>
             <Link
-              to="/login"
-              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-white/10 transition-colors"
+              to="/dashboard"
+              className="bg-white text-gray-800 px-8 py-4 rounded-xl font-medium text-lg hover:bg-gray-200 transition-colors border border-gray-300 shadow-lg hover:shadow-xl"
             >
               Login to Dashboard
             </Link>
@@ -242,7 +280,7 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-white text-gray-500 py-12 px-4 sm:px-6 lg:px-8 border-t">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
@@ -250,7 +288,7 @@ const Landing = () => {
               <ul className="space-y-2">
                 {['Features', 'Pricing', 'Integrations', 'Changelog'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">{item}</a>
+                    <a href="#" className="hover:text-gray-900 transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
@@ -260,7 +298,7 @@ const Landing = () => {
               <ul className="space-y-2">
                 {['About', 'Blog', 'Careers', 'Contact'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">{item}</a>
+                    <a href="#" className="hover:text-gray-900 transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
@@ -270,7 +308,7 @@ const Landing = () => {
               <ul className="space-y-2">
                 {['Documentation', 'Guides', 'API', 'Community'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">{item}</a>
+                    <a href="#" className="hover:text-gray-900 transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
@@ -280,16 +318,16 @@ const Landing = () => {
               <ul className="space-y-2">
                 {['Privacy', 'Terms', 'Security', 'GDPR'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">{item}</a>
+                    <a href="#" className="hover:text-gray-900 transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <DollarSign className="h-6 w-6 text-blue-400" />
-              <span className="ml-2 text-xl font-bold text-white">Expensio</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">Expensio</span>
             </div>
             <p className="text-sm"> 2025 Expensio. All rights reserved.</p>
           </div>

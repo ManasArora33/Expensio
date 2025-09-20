@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PlusCircle, Trash2, Send } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import Navbar from '../components/Navbar';
 
 function Expenses() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Expenses() {
   const [fetchingExpenses, setFetchingExpenses] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async() => {
+    const checkAuth = async () => {
       try {
         const response = await api.get('/auth/me');
         if (!response) {
@@ -52,7 +53,7 @@ function Expenses() {
       });
       fetchExpenses();
       toast.success('Expense added successfully! 🎉');
-      
+
     } catch (error) {
       toast.error('Error adding expense');
       console.error('Error:', error);
@@ -95,129 +96,132 @@ function Expenses() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Add Expenses</h1>
-        <p className="text-gray-600">Tell me about your expense in natural language</p>
-      </div>
-
-      {/* Chat Input Section */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-sm">🤖</span>
-          </div>
-          <h2 className="text-lg font-semibold">AI Expense Parser</h2>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="max-w-4xl mx-auto p-6 space-y-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Add Expenses</h1>
+          <p className="text-gray-600">Tell me about your expense in natural language</p>
         </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder='e.g., "Bought lunch for ₹250 at McDonalds" or "Uber ride ₹120"'
-              className="flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              disabled={loading}
-            />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2 transition-colors"
-            >
-              {loading ? (
-                <>
-                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                  <span>Processing...</span>
-                </>
-              ) : (
-                <>
-                  <Send size={20} />
-                  <span>Add Expense</span>
-                </>
-              )}
-            </button>
+
+        {/* Chat Input Section */}
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm">🤖</span>
+            </div>
+            <h2 className="text-lg font-semibold">AI Expense Parser</h2>
           </div>
-          
-          {loading && (
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-blue-700 flex items-center space-x-2">
-                <div className="animate-pulse">🧠</div>
-                <span>AI is parsing your expense...</span>
-              </p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex space-x-4">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder='e.g., "Bought lunch for ₹250 at McDonalds" or "Uber ride ₹120"'
+                className="flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={loading}
+              />
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                className="px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2 transition-colors"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send size={20} />
+                    <span>Add Expense</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {loading && (
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-blue-700 flex items-center space-x-2">
+                  <div className="animate-pulse">🧠</div>
+                  <span>AI is parsing your expense...</span>
+                </p>
+              </div>
+            )}
+          </form>
+
+          <div className="mt-4 text-sm text-gray-500">
+            <p><strong>Examples:</strong></p>
+            <ul className="list-disc list-inside space-y-1 mt-2">
+              <li>"Coffee ₹150 at Starbucks"</li>
+              <li>"Grocery shopping ₹2500 at Big Bazaar"</li>
+              <li>"Movie tickets ₹400 at PVR"</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Expenses List */}
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold">All Expenses</h2>
+            <div className="text-sm text-gray-500">
+              {expenses.length} {expenses.length === 1 ? 'expense' : 'expenses'} total
+            </div>
+          </div>
+
+          {expenses.length === 0 ? (
+            <div className="text-center py-12">
+              <PlusCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No expenses yet</h3>
+              <p className="text-gray-500">Add your first expense using the chat input above!</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {expenses.map((expense) => (
+                <div
+                  key={expense._id}
+                  className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-4 mb-2">
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(expense.category)}`}>
+                        {expense.category}
+                      </span>
+                      <h3 className="font-medium text-gray-900">{expense.description}</h3>
+                      {expense.merchant && (
+                        <span className="text-sm text-gray-500">at {expense.merchant}</span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <span>{new Date(expense.date).toLocaleDateString()}</span>
+                      {expense.rawInput && (
+                        <span className="italic">"{expense.rawInput}"</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-gray-900">₹{expense.amount.toLocaleString()}</p>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(expense._id)}
+                      className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete expense"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
-        </form>
-
-        <div className="mt-4 text-sm text-gray-500">
-          <p><strong>Examples:</strong></p>
-          <ul className="list-disc list-inside space-y-1 mt-2">
-            <li>"Coffee ₹150 at Starbucks"</li>
-            <li>"Grocery shopping ₹2500 at Big Bazaar"</li>
-            <li>"Movie tickets ₹400 at PVR"</li>
-          </ul>
         </div>
-      </div>
-
-      {/* Expenses List */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">All Expenses</h2>
-          <div className="text-sm text-gray-500">
-            {expenses.length} {expenses.length === 1 ? 'expense' : 'expenses'} total
-          </div>
-        </div>
-        
-        {expenses.length === 0 ? (
-          <div className="text-center py-12">
-            <PlusCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No expenses yet</h3>
-            <p className="text-gray-500">Add your first expense using the chat input above!</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {expenses.map((expense) => (
-              <div 
-                key={expense._id} 
-                className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center space-x-4 mb-2">
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(expense.category)}`}>
-                      {expense.category}
-                    </span>
-                    <h3 className="font-medium text-gray-900">{expense.description}</h3>
-                    {expense.merchant && (
-                      <span className="text-sm text-gray-500">at {expense.merchant}</span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <span>{new Date(expense.date).toLocaleDateString()}</span>
-                    {expense.rawInput && (
-                      <span className="italic">"{expense.rawInput}"</span>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-gray-900">₹{expense.amount.toLocaleString()}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDelete(expense._id)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Delete expense"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      </main>
     </div>
   );
 }
